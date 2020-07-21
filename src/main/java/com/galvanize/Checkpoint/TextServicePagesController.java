@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class TextServicePagesController {
 
@@ -26,6 +28,33 @@ public class TextServicePagesController {
                 firstLetter = firstLetter.toUpperCase();
             }
             result += firstLetter + rest;
+        }
+
+        return result;
+    }
+
+    @GetMapping("/redact")
+    public String redact(
+            @RequestParam(value="original") String original,
+            @RequestParam(value="badWord") List<String> badWords
+    ) {
+        String result = "";
+        String[] originalArr = original.split(" ");
+
+        for (int i = 0; i < originalArr.length ; i++) {
+            String word = originalArr[i];
+            for (int j = 0; j < badWords.size(); j++) {
+                System.out.println("word: " + word + " badWord: " + badWords.get(j));
+                if (word.equals(badWords.get(j))) {
+
+                    word = word.replaceAll("(?i)[a-z]", "*");
+                }
+            }
+            if (i == originalArr.length - 1) {
+                result += word;
+            } else {
+                result += word + " ";
+            }
         }
 
         return result;
