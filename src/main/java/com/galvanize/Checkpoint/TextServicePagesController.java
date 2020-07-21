@@ -1,6 +1,7 @@
 package com.galvanize.Checkpoint;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +45,6 @@ public class TextServicePagesController {
         for (int i = 0; i < originalArr.length ; i++) {
             String word = originalArr[i];
             for (int j = 0; j < badWords.size(); j++) {
-                System.out.println("word: " + word + " badWord: " + badWords.get(j));
                 if (word.equals(badWords.get(j))) {
 
                     word = word.replaceAll("(?i)[a-z]", "*");
@@ -57,6 +57,33 @@ public class TextServicePagesController {
             }
         }
 
+        return result;
+    }
+
+    @PostMapping("/encode")
+    public String encode(
+            @RequestParam(value="message") String message,
+            @RequestParam(value="key") String key
+    ) {
+        String result = "";
+        boolean match = false;
+        String[] alphabetArr = "abcdefghijklmnopqrstuvwxyz".split("");
+        String[] keyArr = key.split("");
+
+        for (char x : message.toCharArray()) {
+            Character ch = x;
+            for (int i = 0; i < alphabetArr.length; i++) {
+                if (ch.toString().equals(alphabetArr[i])) {
+                    result += keyArr[i];
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) {
+                result += ch;
+            }
+            match = false;
+        }
         return result;
     }
 }
