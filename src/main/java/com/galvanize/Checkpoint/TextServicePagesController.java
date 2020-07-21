@@ -1,11 +1,9 @@
 package com.galvanize.Checkpoint;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class TextServicePagesController {
@@ -84,6 +82,32 @@ public class TextServicePagesController {
             }
             match = false;
         }
+        return result;
+    }
+
+    @PostMapping("/s/{find}/{replace}")
+    public String sed(
+            @PathVariable Map<String, String> querystring,
+            @RequestParam(value="text") String text
+            ) {
+        String result = "";
+        String find =querystring.get("find");
+        String replace =querystring.get("replace");
+
+        String[] textArr = text.split(" ");
+
+        for (int i = 0; i < textArr.length ; i++) {
+            String word = textArr[i];
+            if (word.equals(find)) {
+                    word = replace;
+            }
+            if (i == textArr.length - 1) {
+                result += word;
+            } else {
+                result += word + " ";
+            }
+        }
+
         return result;
     }
 }
