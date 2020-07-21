@@ -88,7 +88,7 @@ public class TextServicePagesController {
     @PostMapping("/s/{find}/{replace}")
     public String sed(
             @PathVariable Map<String, String> querystring,
-            @RequestParam(value="text") String text
+            @RequestBody String text
             ) {
         String result = "";
         String find =querystring.get("find");
